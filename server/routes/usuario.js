@@ -2,15 +2,15 @@ const express = require('express');
 const bcrypt = require('bcrypt');
 const _ = require('underscore');
 const Usuario = require('../models/usuario');
+const { verificaToken, verificarAdmin_ROLE } = require('../middlewares/authentication');
 const app = express();
 
-app.get('/usuario', function (req, res) {
-    //res.json('getUsuario Local')
-
+app.get('/usuario', verificaToken,  (req, res) => {
+    
     let desde = req.query.desde || 0;
     desde = Number(desde);
 
-    let limite = req.query.limit || 10;
+    let limite = req.query.limit || 20;
     limite = Number(limite);
 
     Usuario.find({}, 'nombre email role estado google img').skip(desde).limit(limite).exec((err, usuarios)=> { //filtra el json para que mande solo lo necesario
@@ -36,7 +36,7 @@ app.get('/usuario', function (req, res) {
 
 });
   
-app.post('/usuario', function (req, res) {
+app.post('/usuario', [verificaToken, verificarAdmin_ROLE], (req, res)  => {
     let body = req.body;
 
     let usuario = new Usuario({
@@ -65,7 +65,7 @@ app.post('/usuario', function (req, res) {
 
 });
     
-app.put('/usuario/:id', function (req, res) {
+app.put('/usuario/:id', [verificaToken, verificarAdmin_ROLE], function (req, res) {
       let id = req.params.id; //obtenemos el id
       let body = _.pick(req.body,  ['nombre','email','img','role','estado'] ); /**utilizamos pick para indicar en cadena las que queremos actualizar 2 manera**/
 
@@ -90,7 +90,7 @@ app.put('/usuario/:id', function (req, res) {
     });
 });
   
-app.delete('/usuario/:id', function (req, res) {
+app.delete('/usuario/:id', [verificaToken, verificarAdmin_ROLE], function (req, res) {
 
     let id = req.params.id; //obtenemos el id3
 

@@ -41,6 +41,13 @@ if (process.env.NODE_ENV === 'dev'){
 
 process.env.URLDB = urlBD;
 
+
+//===============================
+//         GOOGLE ID KEY
+//===============================
+
+process.env.CLIENT_ID = process.env.CLIENT_ID || '1089010938269-ga4falbn7i1hlfrd6lfprvkb5ri2672d.apps.googleusercontent.com';
+
 //////////////////////////////
 //// comandos para variables globales
 //////////////////////////////

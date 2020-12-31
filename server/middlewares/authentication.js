@@ -44,7 +44,38 @@ let verificarAdmin_ROLE = (req, res, next) => {
     
 }
 
+
+/////////////////////////////////
+//Verifica token para imagenes
+/////////////////////////////////
+
+let verificaTokenImg = (req, res, next) =>{
+
+    let token = req.query.token;  //token es por postman en la url alfinal 'token='algo'
+
+   jwt.verify(token, process.env.SEED, (err, decoded) =>{
+
+    if(err){
+        return res.status(401).json({
+            ok: false,
+            err: {
+                message: 'Token Invalido'
+            }
+        });
+    
+    }
+
+    req.usuario = decoded.usuario;
+    next();
+
+   });
+
+
+}
+
+
 module.exports = {
     verificaToken,
-    verificarAdmin_ROLE
+    verificarAdmin_ROLE,
+    verificaTokenImg
 }
